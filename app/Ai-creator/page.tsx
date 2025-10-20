@@ -15,6 +15,39 @@ export default function AiCreatorPage() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isFirstLoad = useRef(true);
+
+  // 【localStorage】页面加载时读取历史记录
+  useEffect(() => {
+    try {
+      const savedMessages = localStorage.getItem('ai-chat-history');
+      if (savedMessages) {
+        const parsed = JSON.parse(savedMessages);
+        // 将 ISO 字符串转换回 Date 对象
+        const messagesWithDates = parsed.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+        }));
+        setMessages(messagesWithDates);
+      }
+    } catch (error) {
+      console.error('读取聊天记录失败:', error);
+    }
+    isFirstLoad.current = false;
+  }, []);
+
+  // 【localStorage】消息变化时保存到本地（跳过首次加载）
+  useEffect(() => {
+    if (!isFirstLoad.current && messages.length > 0) {
+      try {
+        // 限制保存最近 50 条消息（避免占用过多空间）
+        const messagesToSave = messages.slice(-50);
+        localStorage.setItem('ai-chat-history', JSON.stringify(messagesToSave));
+      } catch (error) {
+        console.error('保存聊天记录失败:', error);
+      }
+    }
+  }, [messages]);
 
   // 自动滚动到最新消息
   const scrollToBottom = () => {
@@ -162,6 +195,12 @@ export default function AiCreatorPage() {
   const handleNewChat = () => {
     setMessages([]);
     setInput('');
+    // 【localStorage】清除历史记录
+    try {
+      localStorage.removeItem('ai-chat-history');
+    } catch (error) {
+      console.error('清除聊天记录失败:', error);
+    }
   };
 
   return (
