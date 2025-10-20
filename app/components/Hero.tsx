@@ -35,6 +35,19 @@ export default function Hero() {
             </a>
           </div>
 
+          {/* Demo: New Page Links */}
+          <div className="mt-8 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
+            <p className="text-sm text-gray-600 mb-3">📌 演示：免费创建的新页面链接</p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <a href="/about" className="text-blue-600 hover:text-blue-800 underline text-sm">
+                /about
+              </a>
+              <a href="/services/consulting" className="text-blue-600 hover:text-blue-800 underline text-sm">
+                /services/consulting
+              </a>
+            </div>
+          </div>
+
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-3xl mx-auto">
             <div className="text-center">
